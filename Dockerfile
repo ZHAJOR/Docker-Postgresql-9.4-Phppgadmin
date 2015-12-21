@@ -19,9 +19,11 @@ WORKDIR /var/www/html
 RUN wget https://github.com/phppgadmin/phppgadmin/archive/master.zip
 RUN rm /var/www/html/index.html && unzip /var/www/html/master.zip
 RUN cp -R phppgadmin-master/* . && rm -r phppgadmin-master
+
 RUN cp conf/config.inc.php-dist conf/config.inc.php
 RUN sed -i "s/\$conf\['extra_login_security'\] = true;/\$conf\['extra_login_security'\] = false;/g" conf/config.inc.php
 RUN sed -i "s/\$conf\['servers'\]\[0\]\['host'\] = '';/\$conf\['servers'\]\[0\]\['host'\] = 'localhost';/g" conf/config.inc.php
+
 RUN service postgresql start; \
   su - postgres -c "/usr/lib/postgresql/9.4/bin/psql -U postgres -c \"ALTER USER postgres with password 'postgres';\""
 RUN sed -i "s/\#listen_addresses = 'localhost'/listen_addresses = '\*'/g" /etc/postgresql/9.4/main/postgresql.conf
@@ -29,8 +31,6 @@ RUN echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/9.4/main/pg_hba.conf
 
 ADD run.sh /run.sh
 RUN chmod -v +x /run.sh
-
-RUN service apache2 stop
 
 EXPOSE 5432
 EXPOSE 80
