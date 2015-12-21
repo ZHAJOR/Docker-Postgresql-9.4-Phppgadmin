@@ -24,7 +24,7 @@ RUN sed -i "s/\$conf\['extra_login_security'\] = true;/\$conf\['extra_login_secu
 RUN sed -i "s/\$conf\['servers'\]\[0\]\['host'\] = '';/\$conf\['servers'\]\[0\]\['host'\] = 'localhost';/g" conf/config.inc.php
 RUN service postgresql start; \
   su - postgres -c "/usr/lib/postgresql/9.4/bin/psql -U postgres -c \"ALTER USER postgres with password 'postgres';\""
-RUN sed -i "s/\#listen_addresses = 'localhost'/\#listen_addresses = '\*'/g" /etc/postgresql/9.4/main/postgresql.conf
+RUN sed -i "s/\#listen_addresses = 'localhost'/listen_addresses = '\*'/g" /etc/postgresql/9.4/main/postgresql.conf
 
 
 RUN service apache2 stop
