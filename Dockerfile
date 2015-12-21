@@ -27,11 +27,12 @@ RUN service postgresql start; \
 RUN sed -i "s/\#listen_addresses = 'localhost'/listen_addresses = '\*'/g" /etc/postgresql/9.4/main/postgresql.conf
 RUN echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/9.4/main/pg_hba.conf
 
+ADD run.sh /run.sh
+RUN chmod -v +x /run.sh
 
 RUN service apache2 stop
 
 EXPOSE 5432
 EXPOSE 80
 
-CMD service postgresql start; \
-    /usr/sbin/apache2ctl -D FOREGROUND
+CMD ["/run.sh"]
